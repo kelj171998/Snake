@@ -7,9 +7,28 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.contextRef = React.createRef();
+        this.handleInput = this.handleInput.bind(this);
+        this.move = 'RIGHT';
     }
 
+    handleInput = (event) => {
+        console.log('Key down');
+
+        let key = event.keyCode;
+        if( key == 37 && this.move != "RIGHT"){
+            this.move = "LEFT";
+        }else if(key == 38 && this.move != "DOWN"){
+            this.move = "UP";
+        }else if(key == 39 && this.move != "LEFT"){
+            this.move = "RIGHT";
+        }else if(key == 40 && this.move != "UP"){
+            this.move = "DOWN";
+        }
+    }
     componentDidMount() {
+        // Draw the entire game
+        let game = setInterval(draw, 100);
+
         // Constants
         const box = 32;
 
@@ -33,20 +52,7 @@ class Game extends React.Component {
         // Create the score
         let score = 0;
 
-        let move;
-        document.addEventListener("keydown",direction);
-        function direction(event){
-            let key = event.keyCode;
-            if( key == 37 && move != "RIGHT"){
-                move = "LEFT";
-            }else if(key == 38 && move != "DOWN"){
-                move = "UP";
-            }else if(key == 39 && move != "LEFT"){
-                move = "RIGHT";
-            }else if(key == 40 && move != "UP"){
-                move = "DOWN";
-            }
-        }
+        document.addEventListener('keydown', this.handleInput);
 
         function collision(head,array){
             for(let i = 0; i < array.length; i++){
@@ -73,16 +79,19 @@ class Game extends React.Component {
         }
         
         // Update food
-        //ctx.drawImage(imgFoodRef, food.x, food.y);
+        imgFoodRef.onload = () => {
+            ctx.drawImage(imgFoodRef, food.x, food.y);
+        }
 
         // Old head position
         let snakeX = snake[0].x;
         let snakeY = snake[0].y;
 
-        if (move == 'LEFT') snakeX -= box;
-        if (move == 'UP') snakeY -= box;
-        if (move == 'RIGHT') snakeX += box;
-        if (move == 'DOWN') snakeY += box;
+        console.log('MOVE: ', this.move);
+        if (this.move == 'LEFT') snakeX -= box;
+        if (this.move == 'UP') snakeY -= box;
+        if (this.move == 'RIGHT') snakeX += box;
+        if (this.move == 'DOWN') snakeY += box;
 
         if (snakeX == food.x && snakeY == food.y) {
             score++;
@@ -92,9 +101,9 @@ class Game extends React.Component {
                 x: Math.floor(Math.random() * 17 + 1) * box,
                 y: Math.floor(Math.random() * 15 + 3) * box
             };
-            // Do not remove the tail
+            // Do not rethis.move the tail
         } else {
-            // Remove the tail
+            // Rethis.move the tail
             snake.pop();
         }
 
@@ -116,8 +125,6 @@ class Game extends React.Component {
         ctx.font = '45px Changa One';
         ctx.fillText(score, 2 * box, 1.6 * box);
 
-        // // Draw the entire game
-        let game = setInterval(draw, 100);
     }
 
     render() {
@@ -126,9 +133,10 @@ class Game extends React.Component {
             <div className="container">
                 <p>Welcome to Snake!</p>
 
+                {/* <div className='input' ref={(i) => this.inputRef = i} ></div> */}
                 <img src={ImgGround} alt='ground' ref='imgGroundRef' style={{position: 'absolute', zIndex: 1}} />
                 <img src={ImgFood} alt='food' ref='imgFoodRef' style={{position: 'absolute', zIndex: 1}}/>
-                <canvas id="gameCanvas" width="608" height="608" ref={'canvas'} style={{position: 'relative', zIndex: 20}}>&lt;</canvas>
+                <canvas onChange={this.handleInput} id="gameCanvas" width="608" height="608" ref={'canvas'} style={{position: 'relative', zIndex: 20}}>&lt;</canvas>
             </div>
         );
     }
