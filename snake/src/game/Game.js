@@ -2,6 +2,7 @@ import React from 'react';
 
 // Images
 import ImgGround from './images/ground.png';
+import ImgFood from './images/food.png';
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -17,9 +18,7 @@ class Game extends React.Component {
 
         // Images
         const imgGroundRef = this.refs.imgGroundRef;
-
-        let imgFood = new Image();
-        imgFood.src = 'images/food.png';
+        const imgFoodRef = this.refs.imgFoodRef;
 
         // Snake entity
         let snake = [];
@@ -68,61 +67,57 @@ class Game extends React.Component {
                 ctx.fillStyle = (i == 0) ? 'green' : 'white';
                 ctx.fillRect(snake[i].x, snake[i].y, box, box);
 
-                // ctx.strokeStyle = 'red';
-                // ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+                ctx.strokeStyle = 'red';
+                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
             }
         }
         
-        //     // Update food
-        //     ctx.drawImage(imgFood, food.x, food.y);
+        // Update food
+        //ctx.drawImage(imgFoodRef, food.x, food.y);
 
-        //     // Old head position
-        //     let snakeX = snake[0].x;
-        //     let snakeY = snake[0].y;
+        // Old head position
+        let snakeX = snake[0].x;
+        let snakeY = snake[0].y;
 
-        //     if (move == 'LEFT') snakeX -= box;
-        //     if (move == 'UP') snakeY -= box;
-        //     if (move == 'RIGHT') snakeX += box;
-        //     if (move == 'DOWN') snakeY += box;
+        if (move == 'LEFT') snakeX -= box;
+        if (move == 'UP') snakeY -= box;
+        if (move == 'RIGHT') snakeX += box;
+        if (move == 'DOWN') snakeY += box;
 
-        //     if (snakeX == food.x && snakeY == food.y) {
-        //         score++;
+        if (snakeX == food.x && snakeY == food.y) {
+            score++;
 
-        //         // Generate new food
-        //         food = {
-        //             x: Math.floor(Math.random() * 17 + 1) * box,
-        //             y: Math.floor(Math.random() * 15 + 3) * box
-        //         };
-        //         // Do not remove the tail
-        //     } else {
-        //         // Remove the tail
-        //         snake.pop();
-        //     }
+            // Generate new food
+            food = {
+                x: Math.floor(Math.random() * 17 + 1) * box,
+                y: Math.floor(Math.random() * 15 + 3) * box
+            };
+            // Do not remove the tail
+        } else {
+            // Remove the tail
+            snake.pop();
+        }
 
-        //     // Add new head
-        //     let newHead = {
-        //         x: snakeX,
-        //         y: snakeY
-        //     };
+        // Add new head
+        let newHead = {
+            x: snakeX,
+            y: snakeY
+        };
 
-        //     // Game over rules
-        //     if (snakeX < box || snakeX > 17 * box || snakeY < 3 * box || snakeY < 3 * box || snakeY > 17 * box || collision(newHead, snake)) {
-        //         clearInterval(game);
-        //     }
+        // Game over rules
+        if (snakeX < box || snakeX > 17 * box || snakeY < 3 * box || snakeY < 3 * box || snakeY > 17 * box || collision(newHead, snake)) {
+            clearInterval(game);
+        }
 
-        //     snake.unshift(newHead);
+        snake.unshift(newHead);
 
-        //     // Update score
-        //     ctx.fillStyle = 'white';
-        //     ctx.font = '45px Changa One';
-        //     ctx.fillText(score, 2 * box, 1.6 * box);
-
-        // }
+        // Update score
+        ctx.fillStyle = 'white';
+        ctx.font = '45px Changa One';
+        ctx.fillText(score, 2 * box, 1.6 * box);
 
         // // Draw the entire game
         let game = setInterval(draw, 100);
-            
-        
     }
 
     render() {
@@ -131,7 +126,8 @@ class Game extends React.Component {
             <div className="container">
                 <p>Welcome to Snake!</p>
 
-                <img className='hidden' src={ImgGround} alt='ground' ref='imgGroundRef' style={{position: 'absolute', zIndex: 1}} />
+                <img src={ImgGround} alt='ground' ref='imgGroundRef' style={{position: 'absolute', zIndex: 1}} />
+                <img src={ImgFood} alt='food' ref='imgFoodRef' style={{position: 'absolute', zIndex: 1}}/>
                 <canvas id="gameCanvas" width="608" height="608" ref={'canvas'} style={{position: 'relative', zIndex: 20}}>&lt;</canvas>
             </div>
         );
