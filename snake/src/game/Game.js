@@ -13,11 +13,13 @@ class Game extends React.Component {
         const box = 32;
 
         // Get canvas content
-        let ctx = this.contextRef.current.getContext('2d');
+        const ctx = this.refs.canvas.getContext('2d');
+
+        // Images
+        const imgGroundRef = this.refs.imgGroundRef;
 
         let imgFood = new Image();
         imgFood.src = 'images/food.png';
-
 
         // Snake entity
         let snake = [];
@@ -57,7 +59,9 @@ class Game extends React.Component {
         }
 
         function draw() {
-             
+            imgGroundRef.onload = () => {
+                ctx.drawImage(imgGroundRef, 0, 0);
+            }
 
             // Update snake
             for (let i = 0; i < snake.length; i++) {
@@ -124,10 +128,11 @@ class Game extends React.Component {
     render() {
 
         return (
-            <div>
+            <div className="container">
                 <p>Welcome to Snake!</p>
-                <img src={ImgGround} alt='ground' />
-                <canvas width="608" height="608" ref={this.contextRef} /*ref={(c) => {this.context = c.getContext('2d')}}*/>&lt;</canvas>
+
+                <img className='hidden' src={ImgGround} alt='ground' ref='imgGroundRef' style={{position: 'absolute', zIndex: 1}} />
+                <canvas id="gameCanvas" width="608" height="608" ref={'canvas'} style={{position: 'relative', zIndex: 20}}>&lt;</canvas>
             </div>
         );
     }
