@@ -46,7 +46,7 @@ class App extends React.Component {
 
     for (let key in moveDictionary) {
       // Check what way the snake is moving
-      if (event.keyCode == moveDictionary[key].keyCode) {
+      if (event.keyCode === moveDictionary[key].keyCode) {
         this.setState(moveDictionary[key]);
       }
     }
@@ -64,7 +64,7 @@ class App extends React.Component {
 
 
     // for (let move in moveDictionary) {
-    //   if (this.state.direction == move) {
+    //   if (this.state.direction === move) {
     //     console.log(move, moveDictionary[move]);
     //     head = moveDictionary[move];
     //   }
@@ -83,6 +83,8 @@ class App extends React.Component {
       case 'UP':
         head = [head[0], head[1] - 2];
         break;
+      default:
+        break;
     }
 
     dots.push(head); // Add the head
@@ -97,16 +99,16 @@ class App extends React.Component {
     let headY = head[1];
 
     const blockDist = 2; // The space between blocks on the snake
-    if (this.state.direction == 'RIGHT' && this.state.direction != 'LEFT') {
+    if (this.state.direction === 'RIGHT' && this.state.direction !== 'LEFT') {
       head = [headX + blockDist, headY];
     }
-    else if (this.state.direction == 'LEFT' && this.state.direction != 'RIGHT') {
+    else if (this.state.direction === 'LEFT' && this.state.direction !== 'RIGHT') {
       head = [headX - blockDist, headY];
     }
-    else if (this.state.direction == 'DOWN' && this.state.direction != 'UP') {
+    else if (this.state.direction === 'DOWN' && this.state.direction !== 'UP') {
       head = [headX, headY + blockDist];
     }
-    else if (this.state.direction == 'UP' && this.state.direction != 'DOWN') {
+    else if (this.state.direction === 'UP' && this.state.direction !== 'DOWN') {
       head = [headX, headY - blockDist];
     }
     // switch (this.state.direction) {
@@ -146,7 +148,7 @@ class App extends React.Component {
       let dotX = dot[0];
       let dotY = dot[1];
 
-      if (headX == dotX && headY == dotY) {
+      if (headX === dotX && headY === dotY) {
         this.onGameOver();
       }
     })
@@ -162,7 +164,7 @@ class App extends React.Component {
     let foodX = food[0];
     let foodY = food[1];
 
-    if (headX == foodX && headY == foodY) {
+    if (headX === foodX && headY === foodY) {
       this.setState({
         food: getRandomCoordinates()
       })
@@ -173,7 +175,7 @@ class App extends React.Component {
 
   enlargeSnake() {
     let newSnake = [...this.state.snakeDots];
-    newSnake.unshift([]);
+    newSnake.unshift([]); // Add part to snake
     this.setState({
       snakeDots: newSnake
     })
